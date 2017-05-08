@@ -5,10 +5,10 @@ var state = {
   db: null,
 }
 
-exports.connect = function(url, done) {
+exports.connect = function(url, options, done) {
   if (state.db) return done()
 
-  MongoClient.connect(url, function(err, db) {
+  MongoClient.connect(url, options, function(err, db) {
     if (err) return done(err)
     state.db = db
     done()
