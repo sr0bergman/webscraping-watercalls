@@ -1,16 +1,14 @@
+// scraper.js
+// =======================================
 var express = require('express');
 var router = express.Router();
 var Promise = require('bluebird')
-var dbCol = Promise.promisifyAll(require('../dbCollectionsConnection.js'))
 var objectId = require("mongodb").ObjectId
 var collection
 var collection2
 const req = require("tinyreq")
 "use strict"
 
-
-// webhook.data.handlers.js
-// ========
 var MongoClient = require("mongodb").MongoClient;
  
 var MONGO_CONNECTION_STRING = 'mongodb://admin2:GISmaster1@aws-us-east-1-portal.25.dblayer.com:19056/Colorado?ssl=true';
