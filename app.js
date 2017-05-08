@@ -47,7 +47,7 @@ function doScrape(){
 
 var CronJob = require('cron').CronJob;
 var job = new CronJob({
-  cronTime: '* 05 11 * * *',
+  cronTime: '* 10 11 * * *',
   onTick: function() {
     /*
      * Runs every day
