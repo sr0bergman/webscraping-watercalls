@@ -1,5 +1,7 @@
 var express = require('express');
-var Promise = require('bluebird')
+var Promise = require('bluebird');
+var retry = require('bluebird-retry');
+var Sleep = require('sleep');
 var scraper = require('./routes/scraper');
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
@@ -10,7 +12,6 @@ var options = {
         sslValidate: false,
     }
 }
-
 
 function doScrape(){
     var data
@@ -36,11 +37,27 @@ function doScrape(){
             return 
         })
         .catch(function(err) {
-            console.log('I CAUGHT YOU MOFO ' + err)
+            console.log("Unable to send response via HTTP");
+            Sleep.sleep(1);
+            return retry(doScrape);
         })
     )
 }
 
-doScrape()
+
+var CronJob = require('cron').CronJob;
+var job = new CronJob({
+  cronTime: '00 57 10 * * *',
+  onTick: function() {
+    /*
+     * Runs every day
+     * at 10:30:00 AM. 
+     */
+    doScrape()
+  },
+  start: true,
+  timeZone: 'America/Denver'
+});
+job.start();
 
 module.exports = app;
