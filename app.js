@@ -1,8 +1,8 @@
-var express = require('express');
-var Promise = require('bluebird');
+var express = require('/home/shane/webscraping-watercalls/node_modules/express');
+var Promise = require('/home/shane/webscraping-watercalls/node_modules/bluebird');
 var scraper = require('./routes/scraper');
-var MongoClient = require('mongodb').MongoClient;
-var assert = require('assert');
+var MongoClient = require('/home/shane/webscraping-watercalls/node_modules/mongodb').MongoClient;
+var assert = require('/home/shane/webscraping-watercalls/node_modules/assert');
 var app = express();
 var options = {
     mongos: {

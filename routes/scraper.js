@@ -1,12 +1,12 @@
 // scraper.js
 // =======================================
-var express = require('express');
+var express = require('/home/shane/webscraping-watercalls/node_modules/express');
 var router = express.Router();
-var Promise = require('bluebird')
-var objectId = require("mongodb").ObjectId
+var Promise = require('/home/shane/webscraping-watercalls/node_modules/bluebird')
+var objectId = require("/home/shane/webscraping-watercalls/node_modules/mongodb").ObjectId
 var collection
 var collection2
-const req = require("tinyreq")
+const req = require("/home/shane/webscraping-watercalls/node_modules/tinyreq")
 "use strict"
 
 var MongoClient = require("mongodb").MongoClient;
