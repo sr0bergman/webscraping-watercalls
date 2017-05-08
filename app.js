@@ -1,7 +1,5 @@
 var express = require('express');
 var Promise = require('bluebird');
-var retry = require('bluebird-retry');
-var Sleep = require('sleep');
 var scraper = require('./routes/scraper');
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
@@ -44,20 +42,9 @@ function doScrape(){
     )
 }
 
+doScrape()
 
-var CronJob = require('cron').CronJob;
-var job = new CronJob({
-  cronTime: '* 10 11 * * *',
-  onTick: function() {
-    /*
-     * Runs every day
-     * at 11:10:00 AM. 
-     */
-    doScrape()
-  },
-  start: false,
-  timeZone: 'America/Los_Angeles'
-});
-job.start();
+
+
 
 module.exports = app;
