@@ -25,7 +25,7 @@ function doScrape(){
         })
         .then(function(d){
             data = d
-            console.log('Move Old Data')
+            console.log('Delete Old Data')
             return scraper.moveData()
         })
         .then(function(){
@@ -38,16 +38,17 @@ function doScrape(){
         })
         .catch(function(err) {
             console.log("Unable to send response via HTTP");
-            Sleep.sleep(1);
-            return retry(doScrape);
+            //Sleep.sleep(100);
+            //return retry(doScrape);
         })
     )
 }
 
+doScrape()
 
 var CronJob = require('cron').CronJob;
 var job = new CronJob({
-  cronTime: '00 25 * * * *',
+  cronTime: '* 00 11 * * *',
   onTick: function() {
     /*
      * Runs every day
@@ -55,9 +56,9 @@ var job = new CronJob({
      */
     doScrape()
   },
-  start: true,
-  timeZone: 'America/Denver'
+  start: false,
+  timeZone: 'America/Los_Angeles'
 });
-job.start();
+//job.start();
 
 module.exports = app;
