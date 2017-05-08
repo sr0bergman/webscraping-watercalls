@@ -18,20 +18,7 @@ var MONGO_CONNECTION_STRING = 'mongodb://admin2:GISmaster1@aws-us-east-1-portal.
 
 
 module.exports = {
-	getCollection: function (d,callback) {
-		return new Promise(function(resolve, reject){
-				//collection = dbCol.get().collection('water_calls')
-				//collection2 = dbCol.get().collection('water_calls_historic')
-				//if(collection && collection2){
-				//	console.log('Got collection')
-				//	resolve()
-				//} else {
-				//	console.log('Did not get collection')
-				//	reject()
-				//}
-				resolve()
-		})
-	},
+
 	getData: function (){
 		return new Promise(function(resolve, reject){
 			req("https://data.colorado.gov/api/views/sjpy-y3gm/rows.json?accessType=DOWNLOAD", function (err, body) {

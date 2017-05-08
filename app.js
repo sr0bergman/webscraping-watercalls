@@ -1,5 +1,3 @@
-process.env['MONGODB_URL'] ="mongodb://admin2:GISmaster1@aws-us-east-1-portal.25.dblayer.com:19056/Colorado?ssl=true"
-
 var express = require('express');
 var Promise = require('bluebird')
 var routes = require('./routes/index');
@@ -43,19 +41,5 @@ function doScrape(){
 }
 
 doScrape()
-/*
-//CONNECT TO MONGODB PROCESS.ENV.THEASSETMAP
-var dbCol = require('./dbCollectionsConnection.js')
-  dbCol.connect(process.env.MONGODB_URL, options, function(err) {
-    if (err) {
-      console.log('Unable to connect to Mongo DB.')
-      
-      //process.exit(1)
-    } else {
-      console.log("Mongo DB Connected")
 
-      doScrape()
-    }
-  })
-*/
 module.exports = app;
