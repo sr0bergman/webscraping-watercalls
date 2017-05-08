@@ -1,8 +1,8 @@
-var express = require('/home/shane/webscraping-watercalls/node_modules/express');
-var Promise = require('/home/shane/webscraping-watercalls/node_modules/bluebird');
+var express = require('express');
+var Promise = require('bluebird');
 var scraper = require('./routes/scraper');
-var MongoClient = require('/home/shane/webscraping-watercalls/node_modules/mongodb').MongoClient;
-var assert = require('/home/shane/webscraping-watercalls/node_modules/assert');
+var MongoClient = require('mongodb').MongoClient;
+var schedule = require('node-schedule');
 var app = express();
 var options = {
     mongos: {
@@ -10,7 +10,7 @@ var options = {
         sslValidate: false,
     }
 }
-
+console.log('Running')
 function doScrape(){
     var data
     return Promise.resolve(
@@ -41,8 +41,11 @@ function doScrape(){
         })
     )
 }
+var j = schedule.scheduleJob('30 * * * *', function(){
+  console.log('The answer to life, the universe, and everything!');
+  doScrape()
+});
 
-doScrape()
 
 
 
