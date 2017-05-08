@@ -10,13 +10,15 @@ const req = require("tinyreq")
 "use strict"
 
 var MongoClient = require("mongodb").MongoClient;
- 
 var MONGO_CONNECTION_STRING = 'mongodb://admin2:GISmaster1@aws-us-east-1-portal.25.dblayer.com:19056/Colorado?ssl=true';
- 
-
 
 module.exports = {
-
+	start: function (){
+		return new Promise(function(resolve, reject){
+			console.log('=======STARTING SCRAPE========')
+			resolve()
+		})
+	},
 	getData: function (){
 		return new Promise(function(resolve, reject){
 			req("https://data.colorado.gov/api/views/sjpy-y3gm/rows.json?accessType=DOWNLOAD", function (err, body) {
@@ -58,8 +60,6 @@ module.exports = {
 					    	resultCursor.nextObject(processItem);
 					    }
 
-			
-					   
 					  }
 
 					  resultCursor.nextObject(processItem);
@@ -79,7 +79,6 @@ module.exports = {
 
 	saveData: function (data){
 		console.log('IN SAVE')
-		console.log(data)
 		return new Promise(function(resolve, reject){
 			MongoClient
 			  .connect(MONGO_CONNECTION_STRING)
@@ -115,17 +114,21 @@ module.exports = {
 							collection.insert(obj)
 				            .then(function() {
 				                console.log("Doc Inserted")
+				                if(data.length){
+					         		console.log(data.length)
+					         		update(data)
+					         	} else {
+					         		db.close()
+					         		console.log('Mongo Closed')
+						      		return resolve(); // All done!
+					         	}
+					            
 				            })
 				            .catch(function(err) {
 				                console.error("Error Inserting Mongo Data")
 				                reject()
 				            });
-				         	if(data.length > 0){
-				         		update(data)
-				         	} else {
-				         		db.close()
-					      		return resolve(); // All done!
-				         	}
+				         	
 			        }
 	        	update(data)
 
