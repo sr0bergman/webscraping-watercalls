@@ -4,22 +4,13 @@ var express = require('express');
 var router = express.Router();
 var Promise = require('bluebird')
 var objectId = require("mongodb").ObjectId
-
+var collection
+var collection2
 const req = require("tinyreq")
 "use strict"
 
-process.env['theAssetMap'] ='mongodb://admin2:GISmaster1@candidate.60.mongolayer.com:10797,candidate.4.mongolayer.com:11032/assetData?replicaSet=set-57043443bb5871bac4000dfe'
-
-//CONNECT TO MONGODB PROCESS.ENV.THEASSETMAP
-var dbCol = require('../dbCollectionsConnection.js')
-  dbCol.connect(process.env.theAssetMap, function(err) {
-    if (err) {
-      console.log('Unable to connect to Mongo DB.')
-      //process.exit(1)
-    } else {
-      console.log("Mongo DB Connected")
-    }
-  })
+var MongoClient = require("mongodb").MongoClient;
+var MONGO_CONNECTION_STRING = 'mongodb://admin2:GISmaster1@aws-us-east-1-portal.25.dblayer.com:19056/Colorado?ssl=true';
 
 module.exports = {
 	start: function (){
@@ -46,23 +37,24 @@ module.exports = {
 		})
 
 	},
-	moveAndDeleteData: function(data){
+	moveData: function(data){
 
 		return new Promise(function(resolve, reject){
+			MongoClient
+			  .connect(MONGO_CONNECTION_STRING)
+			  .then((db) => {
 
-			    var collection = dbCol.get().collection('toddcreek_water_calls');
-			    var collection2 = dbCol.get().collection('toddcreek_water_calls_historic');
+			    var collection = db.collection('water_calls');
+			    var collection2 = db.collection('water_calls_historic');
 
-			    	console.log('collection ' + collection)
 
 					collection.find({}, function(err, resultCursor) {
 					  function processItem(err, item) {
 					    if(item === null) {
 					    	console.log('ADD DINE')
-					    	
+					    	db.close()
 					      	return resolve(); // All done!
 					    } else {
-					    	console.log('IN ELSE ' + item)
 					    	collection2.insert(item)
 					    	collection.deleteOne({ "_id": objectId(item._id) })
 					    	resultCursor.nextObject(processItem);
@@ -74,20 +66,26 @@ module.exports = {
 					})  
 
 
-			
-			  
+			  })
+			  .catch((error) => {
+			    // error handle the connection
+			  });
 		})
+		
+
 
 
 	},
 
 	saveData: function (data){
-		
+		console.log('IN SAVE')
 		return new Promise(function(resolve, reject){
-				
+			MongoClient
+			  .connect(MONGO_CONNECTION_STRING)
+			  .then((db) => {
 
-				var collection = dbCol.get().collection('toddcreek_water_calls');
-			    	console.log('SAVE COLLECTION ' + collection)
+			    var collection = db.collection('water_calls');
+			    
 			    	function update(data){
 						var doc = data.pop()
 						var dataDateTime = doc[9].split('T')
@@ -120,7 +118,7 @@ module.exports = {
 					         		console.log(data.length)
 					         		update(data)
 					         	} else {
-					         		dbCol.close()
+					         		db.close()
 					         		console.log('Mongo Closed')
 						      		return resolve(); // All done!
 					         	}
@@ -135,12 +133,14 @@ module.exports = {
 	        	update(data)
 
 
-			  
+			  })
+			  .catch((error) => {
+			    // error handle the connection
+			  });
 			
 	        
 						
 		})
-
 
 	},
 };

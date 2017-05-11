@@ -1,15 +1,9 @@
 var express = require('express');
 var Promise = require('bluebird');
 var scraper = require('./routes/scraper');
-var MongoClient = require('mongodb').MongoClient;
 var schedule = require('node-schedule');
 var app = express();
-var options = {
-    mongos: {
-        ssl: true,
-        sslValidate: false,
-    }
-}
+
 console.log('Running')
 function doScrape(){
     var data
@@ -23,8 +17,8 @@ function doScrape(){
         })
         .then(function(d){
             data = d
-            console.log('Delete Old Data')
-            return scraper.moveData()
+            console.log('Move and Delete Old Data')
+            return scraper.moveAndDeleteData()
         })
         .then(function(){
             console.log('Save New Data')
@@ -41,7 +35,10 @@ function doScrape(){
         })
     )
 }
-var j = schedule.scheduleJob('30 * * * *', function(){
+
+
+//Schedule Scrape to Run Every Morning at 6:05 AM
+var j = schedule.scheduleJob('05 6 * * *', function(){
   console.log('The answer to life, the universe, and everything!');
   doScrape()
 });
