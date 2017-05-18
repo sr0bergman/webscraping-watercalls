@@ -36,8 +36,8 @@ function doScrape(){
         })
     )
 }
-/* This runs at the 30th mintue of every hour. */
-schedule.scheduleJob('0 35 * * * *', function(){
+/* This runs at the 45th mintue of every hour. */
+schedule.scheduleJob('0 45 * * * *', function(){
     console.log('This runs at the 30th mintue of every hour.');
     doScrape()
 });
