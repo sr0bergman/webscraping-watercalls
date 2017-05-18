@@ -29,19 +29,24 @@ function doScrape(){
             return 
         })
         .catch(function(err) {
+            console.log(err)
             console.log("Unable to send response via HTTP");
             //Sleep.sleep(100);
             //return retry(doScrape);
         })
     )
 }
-
+/* This runs at the 30th mintue of every hour. */
+schedule.scheduleJob('0 35 * * * *', function(){
+    console.log('This runs at the 30th mintue of every hour.');
+    doScrape()
+});
 
 //Schedule Scrape to Run Every Morning at 6:05 AM
-var j = schedule.scheduleJob('05 6 * * *', function(){
-  console.log('The answer to life, the universe, and everything!');
-  doScrape()
-});
+//var j = schedule.scheduleJob('0 10 * * *', function(){
+//  console.log('The answer to life, the universe, and everything!');
+//  doScrape()
+//});
 
 
 

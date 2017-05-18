@@ -12,32 +12,34 @@ process.env['theAssetMap'] ='mongodb://admin2:GISmaster1@candidate.60.mongolayer
 
 //CONNECT TO MONGODB PROCESS.ENV.THEASSETMAP
 var dbCol = require('../dbCollectionsConnection.js')
-  dbCol.connect(process.env.theAssetMap, function(err) {
-    if (err) {
-      console.log('Unable to connect to Mongo DB.')
-      //process.exit(1)
-    } else {
-      console.log("Mongo DB Connected")
-    }
-  })
+  
 
 module.exports = {
 	start: function (){
 		return new Promise(function(resolve, reject){
 			console.log('=======STARTING SCRAPE========')
-			resolve()
+			dbCol.connect(process.env.theAssetMap, function(err) {
+			    if (err) {
+			      console.log('Unable to connect to Mongo DB.')
+			      reject(err)
+			    } else {
+			      console.log("Mongo DB Connected")
+			      resolve()
+			    }
+			  })
+			
 		})
 	},
 	getData: function (){
 		return new Promise(function(resolve, reject){
 			req("https://data.colorado.gov/api/views/sjpy-y3gm/rows.json?accessType=DOWNLOAD", function (err, body) {
 				if(err){
-					return reject()
+					return reject(err)
 				}
 			    var json = JSON.parse(body)
 			    var data = json.data
 			    if(!data.length){
-			    	return reject()
+			    	return reject(err)
 			    } else {
 			    	resolve(data)
 			    }
@@ -51,19 +53,19 @@ module.exports = {
 		return new Promise(function(resolve, reject){
 
 			    var collection = dbCol.get().collection('toddcreek_water_calls');
-			    var collection2 = dbCol.get().collection('toddcreek_water_calls_historic');
-
-			    	console.log('collection ' + collection)
+			    	console.log('Got Water Calls Collection')
+			    //var collection2 = dbCol.get().collection('toddcreek_water_calls_historic');
+			    //	console.log('Got Water Calls HISTORIC Collection')
 
 					collection.find({}, function(err, resultCursor) {
 					  function processItem(err, item) {
 					    if(item === null) {
-					    	console.log('ADD DINE')
+					    	console.log('ADD DONE')
 					    	
 					      	return resolve(); // All done!
 					    } else {
-					    	console.log('IN ELSE ' + item)
-					    	collection2.insert(item)
+					    	console.log('DELETING... ')
+					    	//collection2.insert(item)
 					    	collection.deleteOne({ "_id": objectId(item._id) })
 					    	resultCursor.nextObject(processItem);
 					    }
